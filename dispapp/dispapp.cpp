@@ -22,37 +22,45 @@ int main(int argc, char** argv)
 
 		if (SUCCEEDED(hr))
 		{
-			IHelloWorld* helloWorld = NULL;
+			DWORD ctx[] = { CLSCTX_LOCAL_SERVER, CLSCTX_INPROC_SERVER };
+			int i = 0;
 
-			hr = CoCreateInstance(clsid, NULL, CLSCTX_LOCAL_SERVER, IID_IHelloWorld, (void**)&helloWorld);
-
-			if (SUCCEEDED(hr))
+			while (i < sizeof(ctx) / sizeof(ctx[0]))
 			{
-				BSTR result = NULL;
-				int hint = argc > 1 ? atoi(argv[1]) : 1;
+				IHelloWorld* helloWorld = NULL;
 
-				hr = helloWorld->GetMessage(hint, &result);
+				hr = CoCreateInstance(clsid, NULL, ctx[i], IID_IHelloWorld, (void**)&helloWorld);
 
 				if (SUCCEEDED(hr))
 				{
-					printf("%S\n", result);
+					BSTR result = NULL;
+					int hint = argc > 1 ? atoi(argv[1]) : 1;
 
-					if (result)
+					hr = helloWorld->GetMessage(hint, &result);
+
+					if (SUCCEEDED(hr))
 					{
-						SysFreeString(result);
+						printf("%08lx - %S\n", ctx[i], result);
+
+						if (result)
+						{
+							SysFreeString(result);
+						}
 					}
+
+					helloWorld->Release();
 				}
 
-				helloWorld->Release();
+				if (FAILED(hr))
+				{
+					fprintf(stderr, "%08lx - 0x%lx\n", ctx[i], (long)hr);
+				}
+
+				i++;
 			}
 		}
 
 		CoUninitialize();
-	}
-
-	if (FAILED(hr))
-	{
-		fprintf(stderr, "0x%lx\n", (long)hr);
 	}
 
 	return FAILED(hr);
