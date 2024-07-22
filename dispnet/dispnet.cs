@@ -4,6 +4,7 @@
  ****/
 
 using System;
+using System.Linq;
 
 namespace RhubarbGeekNz.DllSurrogate
 {
@@ -13,9 +14,11 @@ namespace RhubarbGeekNz.DllSurrogate
         {
             IHelloWorld helloWorld = Activator.CreateInstance(Type.GetTypeFromProgID("RhubarbGeekNz.DllSurrogate")) as IHelloWorld;
 
-            string result = helloWorld.GetMessage(args.Length > 0 ? Int32.Parse(args[0]) : 1);
-
-            Console.WriteLine($"{result}");
+            foreach (int hint in args.Length == 0 ? new int[] { 1, 2, 3, 4, 5 } : args.Select(t => Int32.Parse(t)).ToArray())
+            {
+                string result = helloWorld.GetMessage(hint);
+                Console.WriteLine($"{hint} {result}");
+            }
         }
     }
 }
