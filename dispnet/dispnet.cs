@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace RhubarbGeekNz.DllSurrogate
+namespace RhubarbGeekNzDllSurrogate
 {
     internal class Program
     {
@@ -15,9 +15,9 @@ namespace RhubarbGeekNz.DllSurrogate
         {
             CLSIDFromProgID("RhubarbGeekNz.DllSurrogate", out Guid clsid);
 
-            CoCreateInstance(clsid, IntPtr.Zero, 4, IID_IDispatch, out object dispatch);
+            CoCreateInstance(clsid, IntPtr.Zero, 4, typeof(IHelloWorld).GUID, out object server);
 
-            IHelloWorld helloWorld = dispatch as IHelloWorld;
+            IHelloWorld helloWorld = server as IHelloWorld;
 
             foreach (int hint in args.Length == 0 ? new int[] { 1, 2, 3, 4, 5 } : args.Select(t => Int32.Parse(t)).ToArray())
             {
@@ -27,13 +27,11 @@ namespace RhubarbGeekNz.DllSurrogate
         }
 
         [DllImport("ole32.dll", PreserveSig = false)]
-        static extern int CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid,
+        static extern void CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid,
            IntPtr pUnkOuter, UInt32 dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid,
            [MarshalAs(UnmanagedType.IUnknown)] out object ppv);
 
         [DllImport("ole32.dll", PreserveSig = false)]
-        static extern int CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid pclsid);
-
-        static Guid IID_IDispatch = Guid.Parse("00020400-0000-0000-C000-000000000046");
+        static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid pclsid);
     }
 }
