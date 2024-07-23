@@ -17,8 +17,10 @@ Add-Type -TypeDefinition @"
 		{
 			public static object CreateInstance(string progId)
 			{
-				CLSIDFromProgID(progId, out Guid clsid);
-				CoCreateInstance(clsid, IntPtr.Zero, 4, IID_IDispatch, out object dispatch);
+				Guid clsid;
+				CLSIDFromProgID(progId, out clsid);
+				object dispatch;
+				CoCreateInstance(clsid, IntPtr.Zero, 4, IID_IDispatch, out dispatch);
 				return dispatch;
 			}
 
