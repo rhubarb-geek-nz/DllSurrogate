@@ -7,6 +7,8 @@ param(
 	$Hint = @(1, 2, 3, 4, 5)
 )
 
+$ErrorActionPreference = 'Stop'
+
 Add-Type -TypeDefinition @"
 	using System;
 	using System.Runtime.InteropServices;
@@ -25,12 +27,12 @@ Add-Type -TypeDefinition @"
 			}
 
 			[DllImport("ole32.dll", PreserveSig = false)]
-			static extern int CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid,
+			static extern void CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid,
 				IntPtr pUnkOuter, UInt32 dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid,
 				[MarshalAs(UnmanagedType.IUnknown)] out object ppv);
 
 			[DllImport("ole32.dll", PreserveSig = false)]
-			static extern int CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid pclsid);
+			static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid pclsid);
 
 			static readonly Guid IID_IDispatch = Guid.Parse("00020400-0000-0000-C000-000000000046");
 		}
