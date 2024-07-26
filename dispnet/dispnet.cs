@@ -13,7 +13,7 @@ namespace RhubarbGeekNzDllSurrogate
     {
         static void Main(string[] args)
         {
-            CLSIDFromProgID("RhubarbGeekNz.DllSurrogate", out Guid clsid);
+            Guid clsid = Type.GetTypeFromProgID("RhubarbGeekNz.DllSurrogate").GUID;
 
             foreach (uint clsctx in new uint[] { 4, 1 })
             {
@@ -33,8 +33,5 @@ namespace RhubarbGeekNzDllSurrogate
         static extern void CoCreateInstance([In, MarshalAs(UnmanagedType.LPStruct)] Guid rclsid,
            IntPtr pUnkOuter, UInt32 dwClsContext, [In, MarshalAs(UnmanagedType.LPStruct)] Guid riid,
            [MarshalAs(UnmanagedType.IUnknown)] out object ppv);
-
-        [DllImport("ole32.dll", PreserveSig = false)]
-        static extern void CLSIDFromProgID([MarshalAs(UnmanagedType.LPWStr)] string lpszProgID, out Guid pclsid);
     }
 }
