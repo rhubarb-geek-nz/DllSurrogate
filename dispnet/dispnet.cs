@@ -15,14 +15,17 @@ namespace RhubarbGeekNzDllSurrogate
         {
             CLSIDFromProgID("RhubarbGeekNz.DllSurrogate", out Guid clsid);
 
-            CoCreateInstance(clsid, IntPtr.Zero, 4, typeof(IHelloWorld).GUID, out object server);
-
-            IHelloWorld helloWorld = server as IHelloWorld;
-
-            foreach (int hint in args.Length == 0 ? new int[] { 1, 2, 3, 4, 5 } : args.Select(t => Int32.Parse(t)).ToArray())
+            foreach (uint clsctx in new uint[] { 4, 1 })
             {
-                string result = helloWorld.GetMessage(hint);
-                Console.WriteLine($"{hint} {result}");
+                CoCreateInstance(clsid, IntPtr.Zero, clsctx, typeof(IHelloWorld).GUID, out object server);
+
+                IHelloWorld helloWorld = server as IHelloWorld;
+
+                foreach (int hint in args.Length == 0 ? new int[] { 1, 2, 3, 4, 5 } : args.Select(t => Int32.Parse(t)).ToArray())
+                {
+                    string result = helloWorld.GetMessage(hint);
+                    Console.WriteLine($"{clsctx} {hint} {result}");
+                }
             }
         }
 

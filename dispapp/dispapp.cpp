@@ -13,51 +13,41 @@ int main(int argc, char** argv)
 
 	if (SUCCEEDED(hr))
 	{
-		BSTR app = SysAllocString(L"RhubarbGeekNz.DllSurrogate");
-		CLSID clsid;
+		DWORD ctx[] = { CLSCTX_LOCAL_SERVER, CLSCTX_INPROC_SERVER };
+		int i = 0;
 
-		hr = CLSIDFromProgID(app, &clsid);
-
-		SysFreeString(app);
-
-		if (SUCCEEDED(hr))
+		while (i < sizeof(ctx) / sizeof(ctx[0]))
 		{
-			DWORD ctx[] = { CLSCTX_LOCAL_SERVER, CLSCTX_INPROC_SERVER };
-			int i = 0;
+			IHelloWorld* helloWorld = NULL;
 
-			while (i < sizeof(ctx) / sizeof(ctx[0]))
+			hr = CoCreateInstance(CLSID_CHelloWorld, NULL, ctx[i], IID_IHelloWorld, (void**)&helloWorld);
+
+			if (SUCCEEDED(hr))
 			{
-				IHelloWorld* helloWorld = NULL;
+				BSTR result = NULL;
+				int hint = argc > 1 ? atoi(argv[1]) : 1;
 
-				hr = CoCreateInstance(clsid, NULL, ctx[i], IID_IHelloWorld, (void**)&helloWorld);
+				hr = helloWorld->GetMessage(hint, &result);
 
 				if (SUCCEEDED(hr))
 				{
-					BSTR result = NULL;
-					int hint = argc > 1 ? atoi(argv[1]) : 1;
+					printf("%08lx - %S\n", ctx[i], result);
 
-					hr = helloWorld->GetMessage(hint, &result);
-
-					if (SUCCEEDED(hr))
+					if (result)
 					{
-						printf("%08lx - %S\n", ctx[i], result);
-
-						if (result)
-						{
-							SysFreeString(result);
-						}
+						SysFreeString(result);
 					}
-
-					helloWorld->Release();
 				}
 
-				if (FAILED(hr))
-				{
-					fprintf(stderr, "%08lx - 0x%lx\n", ctx[i], (long)hr);
-				}
-
-				i++;
+				helloWorld->Release();
 			}
+
+			if (FAILED(hr))
+			{
+				fprintf(stderr, "%08lx - 0x%lx\n", ctx[i], (long)hr);
+			}
+
+			i++;
 		}
 
 		CoUninitialize();

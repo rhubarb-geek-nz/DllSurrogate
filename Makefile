@@ -3,14 +3,15 @@
 
 BINDIR=bin\$(VSCMD_ARG_TGT_ARCH)
 APPNAME=dispapp
-LIBNAME=displib
+DLLNAME=displib
 TLBNAME=disptlb
+LIBNAME=RhubarbGeekNzDllSurrogate
 
-all: $(BINDIR) $(BINDIR)\$(LIBNAME).dll $(BINDIR)\$(TLBNAME).dll $(BINDIR)\$(APPNAME).exe
+all: $(BINDIR) $(BINDIR)\$(DLLNAME).dll $(BINDIR)\$(LIBNAME).dll $(BINDIR)\$(APPNAME).exe
 
 clean:
 	if exist $(BINDIR) rmdir /q /s $(BINDIR)
-	cd $(LIBNAME)
+	cd $(DLLNAME)
 	$(MAKE) clean
 	cd ..
 	cd $(APPNAME)
@@ -26,23 +27,23 @@ $(BINDIR):
 $(BINDIR)\$(APPNAME).exe: $(APPNAME)\$(BINDIR)\$(APPNAME).exe
 	copy $(APPNAME)\$(BINDIR)\$(APPNAME).exe $@
 
-$(BINDIR)\$(LIBNAME).dll: $(LIBNAME)\$(BINDIR)\$(LIBNAME).dll
-	copy $(LIBNAME)\$(BINDIR)\$(LIBNAME).dll $@
+$(BINDIR)\$(DLLNAME).dll: $(DLLNAME)\$(BINDIR)\$(DLLNAME).dll
+	copy $(DLLNAME)\$(BINDIR)\$(DLLNAME).dll $@
 
-$(BINDIR)\$(TLBNAME).dll: $(TLBNAME)\$(BINDIR)\$(TLBNAME).dll
-	copy $(TLBNAME)\$(BINDIR)\$(TLBNAME).dll $@
+$(BINDIR)\$(LIBNAME).dll: $(TLBNAME)\$(BINDIR)\$(LIBNAME).dll
+	copy $(TLBNAME)\$(BINDIR)\$(LIBNAME).dll $@
 
 $(APPNAME)\$(BINDIR)\$(APPNAME).exe:
 	cd $(APPNAME)
 	$(MAKE) CertificateThumbprint=$(CertificateThumbprint)
 	cd ..
 
-$(LIBNAME)\$(BINDIR)\$(LIBNAME).dll:
-	cd $(LIBNAME)
+$(DLLNAME)\$(BINDIR)\$(DLLNAME).dll:
+	cd $(DLLNAME)
 	$(MAKE) CertificateThumbprint=$(CertificateThumbprint)
 	cd ..
 
-$(TLBNAME)\$(BINDIR)\$(TLBNAME).dll:
+$(TLBNAME)\$(BINDIR)\$(LIBNAME).dll:
 	cd $(TLBNAME)
 	$(MAKE) CertificateThumbprint=$(CertificateThumbprint)
 	cd ..
