@@ -27,7 +27,7 @@
   <Fragment>
     <ComponentGroup Id="ProductComponents">
       <Component Id="cmp49644F99A8DC013BD2FA39270E26C76C" Guid="*" Directory="INSTALLDIRBIN" Win64="$(env.PRODUCTWIN64)">
-        <File Id="fil206829A74DFF7880F64BE9D5C35CFF80" KeyPath="yes" Source="..\bin\$(env.PRODUCTARCH)\displib.dll">
+        <File Id="fil206829A74DFF7880F64BE9D5C35CFF80" KeyPath="yes" Source="..\bin\$(env.PRODUCTARCH)\RhubarbGeekNzDllSurrogate.dll">
           <TypeLib Id="{E78F53BC-8BD5-41D9-9397-A0D8DECD1295}" Description="RhubarbGeekNzDllSurrogate" HelpDirectory="INSTALLDIR" MajorVersion="0" MinorVersion="0" Language="0">
             <Interface Id="{C976DA40-D2D1-40A3-A40B-12AB0ED3ABE9}" Name="IHelloWorld" ProxyStubClassId32="{00020424-0000-0000-C000-000000000046}" />
           </TypeLib>
